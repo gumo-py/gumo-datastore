@@ -44,6 +44,7 @@ def test_dict_pairs_to_key():
     assert isinstance(key, EntityKey)
     assert key.flat_pairs() == ['Book', 'name', 'BookComment', 'comment']
 
+
 def test_flat_pairs():
     key = EntityKeyFactory().build_from_pairs(pairs=sample_key_pairs)
     assert key.flat_pairs() == ['Book', 'name', 'BookComment', 'comment']

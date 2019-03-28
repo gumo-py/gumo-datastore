@@ -18,7 +18,7 @@ def test_to_datastore_key():
     datastore_key = key_mapper.to_datastore_key(entity_key=entity_key)
 
     assert isinstance(datastore_key, datastore.Key), 'must be a datastore.Key'
-    assert datastore_key.flat_path  == ('Book', 'name', 'BookComment', 'comment')
+    assert datastore_key.flat_path == ('Book', 'name', 'BookComment', 'comment')
     assert datastore_key.kind == 'BookComment'
     assert datastore_key.name == 'comment'
 
