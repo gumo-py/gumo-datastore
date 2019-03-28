@@ -5,9 +5,8 @@ export PATH = venv/bin:$(shell echo $PATH)
 .PHONY: setup
 setup:
 	[ -d venv ] || python3 -m venv venv
-	pip3 install twine wheel pytest pip-tools
-	pip3 install -r requirements.txt
-	pip3 install --upgrade gumo-core
+	pip3 install --ignore-installed twine wheel pytest pip-tools
+	pip3 install --ignore-installed -r requirements.txt
 
 .PHONY: deploy
 deploy: clean build
