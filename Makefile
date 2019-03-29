@@ -37,6 +37,7 @@ clean:
 .PHONY: pip-compile
 pip-compile:
 	pip-compile --upgrade-package gumo-core --output-file requirements.txt requirements.in
+	pip3 install --ignore-installed -r requirements.txt
 
 .PHONY: test
 test: build
