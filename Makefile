@@ -1,6 +1,6 @@
 package_name = gumo-datastore
 
-export PATH = venv/bin:$(shell echo $PATH)
+export PATH := venv/bin:$(shell echo ${PATH})
 
 .PHONY: setup
 setup:
@@ -32,7 +32,7 @@ build:
 
 .PHONY: clean
 clean:
-	rm -rf ${package_name}.egg-info dist build
+	rm -rf $(subst -,_,${package_name}).egg-info dist build
 
 .PHONY: pip-compile
 pip-compile:
