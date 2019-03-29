@@ -13,7 +13,7 @@ google-cloud-core==0.29.1  # via google-cloud-datastore
 google-cloud-datastore==1.7.3
 googleapis-common-protos==1.5.9  # via google-api-core
 grpcio==1.19.0            # via google-api-core
-gumo-core==0.0.10
+gumo-core==0.0.12
 idna==2.8                 # via requests
 injector==0.15.0          # via gumo-core
 protobuf==3.7.1           # via google-api-core, googleapis-common-protos
