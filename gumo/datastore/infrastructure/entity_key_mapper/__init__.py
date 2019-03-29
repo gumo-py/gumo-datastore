@@ -7,7 +7,7 @@ from google.cloud import datastore
 from gumo.core import GumoConfiguration
 
 from gumo.core import EntityKey
-from gumo.core.domain.entity_key import NoneKey  # TODO: change to gumo.core.NoneKey
+from gumo.core import NoneKey
 from gumo.core import EntityKeyFactory
 
 
