@@ -1,9 +1,10 @@
 from logging import getLogger
 
+from gumo.core import EntityKey
+from gumo.core import EntityKeyFactory
+
 from gumo.datastore._configuration import configure
 from gumo.datastore.domain.configuration import DatastoreConfiguration
-from gumo.datastore.domain.entity_key import EntityKey
-from gumo.datastore.domain.entity_key import EntityKeyFactory
 
 from gumo.datastore.infrastructure.repository import datastore_transaction
 

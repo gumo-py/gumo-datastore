@@ -1,8 +1,8 @@
 from google.cloud import datastore
 
 from gumo.core.injector import injector
-from gumo.datastore.domain.entity_key import EntityKeyFactory
-from gumo.datastore.domain.entity_key import EntityKey
+from gumo.core import EntityKeyFactory
+from gumo.core import EntityKey
 
 from gumo.datastore.infrastructure.entity_key_mapper import EntityKeyMapper
 
