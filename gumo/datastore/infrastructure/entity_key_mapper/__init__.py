@@ -6,9 +6,9 @@ from google.cloud import datastore
 
 from gumo.core import GumoConfiguration
 
-from gumo.datastore.domain.entity_key import EntityKey
-from gumo.datastore.domain.entity_key import NoneKey
-from gumo.datastore.domain.entity_key import EntityKeyFactory
+from gumo.core import EntityKey
+from gumo.core.domain.entity_key import NoneKey  # TODO: change to gumo.core.NoneKey
+from gumo.core import EntityKeyFactory
 
 
 class EntityKeyMapper:
