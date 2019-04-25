@@ -1,5 +1,7 @@
 # gumo-datastore
 
+[![CircleCI](https://circleci.com/gh/gumo-py/gumo-datastore.svg?style=svg)](https://circleci.com/gh/gumo-py/gumo-datastore)
+
 ## Configuration
 
 ```python
