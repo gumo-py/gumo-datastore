@@ -4,7 +4,7 @@ from gumo.core.injector import injector
 from gumo.core import EntityKeyFactory
 from gumo.core import EntityKey
 
-from gumo.datastore.infrastructure.entity_key_mapper import EntityKeyMapper
+from gumo.datastore.infrastructure import EntityKeyMapper
 
 
 key_mapper = injector.get(EntityKeyMapper)  # type: EntityKeyMapper
