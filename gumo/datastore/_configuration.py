@@ -59,4 +59,7 @@ def configure(
 
     injector.binder.bind(DatastoreConfiguration, to=config)
 
+    from gumo.datastore._bind import datastore_binder
+    injector.binder.install(datastore_binder)
+
     return config
