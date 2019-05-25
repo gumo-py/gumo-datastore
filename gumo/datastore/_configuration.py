@@ -1,3 +1,4 @@
+import os
 from logging import getLogger
 
 from typing import Optional
@@ -41,6 +42,19 @@ def configure(
         emulator_host=emulator_host,
         namespace=namespace,
     )
+
+    if config.use_local_emulator:
+        if 'DATASTORE_EMULATOR_HOST' not in os.environ:
+            raise RuntimeError(
+                f'The environment variable "DATASTORE_EMULATOR_HOST" is required when using a datastore emulator.'
+            )
+        if os.environ['DATASTORE_EMULATOR_HOST'] != config.emulator_host:
+            host = os.environ['DATASTORE_EMULATOR_HOST']
+            raise RuntimeError(
+                f'Env-var "env["DATASTORE_EMULATOR_HOST"] and config.emulator_host are not corrected. '
+                f'env["DATASTORE_EMULATOR_HOST"]={host}, config.emulator_host={config.emulator_host}'
+            )
+
     logger.debug(f'Gumo.Datastore is configured, config={config}')
 
     injector.binder.bind(DatastoreConfiguration, to=config)
