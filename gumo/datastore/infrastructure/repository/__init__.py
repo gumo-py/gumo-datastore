@@ -11,7 +11,7 @@ from gumo.datastore.infrastructure.entity_key_mapper import EntityKeyMapper
 from google.cloud import datastore
 
 
-class _DatastoreClientFactory:
+class DatastoreClientFactory:
     @inject
     def __init__(
             self,
@@ -37,7 +37,7 @@ class DatastoreRepositoryMixin:
     @property
     def datastore_client(self) -> datastore.Client:
         if self._datastore_client is None:
-            factory = injector.get(_DatastoreClientFactory)  # type: _DatastoreClientFactory
+            factory = injector.get(DatastoreClientFactory)  # type: DatastoreClientFactory
             self._datastore_client = factory.build()
 
         return self._datastore_client
@@ -52,7 +52,7 @@ class DatastoreRepositoryMixin:
 
 @contextmanager
 def datastore_transaction():
-    datastore_client = injector.get(_DatastoreClientFactory).build()  # type: datastore.Client
+    datastore_client = injector.get(DatastoreClientFactory).build()  # type: datastore.Client
 
     with datastore_client.transaction():
         yield
