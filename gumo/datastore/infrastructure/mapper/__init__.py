@@ -1,3 +1,6 @@
+import datetime
+from typing import Optional
+
 from gumo.core.injector import injector
 from gumo.datastore.infrastructure.entity_key_mapper import EntityKeyMapper
 
@@ -14,3 +17,17 @@ class DatastoreMapperMixin:
             self._entity_key_mapper = injector.get(EntityKeyMapper)  # type: EntityKeyMapper
 
         return self._entity_key_mapper
+
+    def convert_datetime(self, t: datetime.datetime) -> Optional[datetime.datetime]:
+        if t is None:
+            return
+
+        return datetime.datetime(
+            year=t.year,
+            month=t.month,
+            day=t.day,
+            hour=t.hour,
+            minute=t.minute,
+            second=t.second,
+            microsecond=t.microsecond,
+        )
