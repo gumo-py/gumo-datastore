@@ -5,7 +5,7 @@ name = 'gumo-datastore'
 version = '0.0.15'
 description = 'Gumo Datastore Library'
 dependencies = [
-    'gumo-core >= 0.0.30',
+    'gumo-core >= 0.0.31',
     'google-cloud-datastore >= 1.7.1',
 ]
 
