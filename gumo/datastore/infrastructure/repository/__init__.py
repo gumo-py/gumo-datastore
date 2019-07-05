@@ -1,31 +1,10 @@
-from injector import inject
 from contextlib import contextmanager
 
 from gumo.core.injector import injector
-
-from gumo.core import GumoConfiguration
 from gumo.datastore.infrastructure.configuration import DatastoreConfiguration
-
 from gumo.datastore.infrastructure.entity_key_mapper import EntityKeyMapper
 
 from google.cloud import datastore
-
-
-class DatastoreClientFactory:
-    @inject
-    def __init__(
-            self,
-            gumo_config: GumoConfiguration,
-            datastore_config: DatastoreConfiguration
-    ):
-        self._gumo_config = gumo_config
-        self._datastore_config = datastore_config
-
-    def build(self) -> datastore.Client:
-        return datastore.Client(
-            project=self._gumo_config.google_cloud_project.value,
-            namespace=self._datastore_config.namespace,
-        )
 
 
 class DatastoreRepositoryMixin:
@@ -37,8 +16,8 @@ class DatastoreRepositoryMixin:
     @property
     def datastore_client(self) -> datastore.Client:
         if self._datastore_client is None:
-            factory = injector.get(DatastoreClientFactory)  # type: DatastoreClientFactory
-            self._datastore_client = factory.build()
+            configuration = injector.get(DatastoreConfiguration)  # type: DatastoreConfiguration
+            self._datastore_client = configuration.client
 
         return self._datastore_client
 
@@ -52,7 +31,7 @@ class DatastoreRepositoryMixin:
 
 @contextmanager
 def datastore_transaction():
-    datastore_client = injector.get(DatastoreClientFactory).build()  # type: datastore.Client
+    datastore_client = injector.get(DatastoreConfiguration).client  # type: datastore.Client
 
     with datastore_client.transaction():
         yield
