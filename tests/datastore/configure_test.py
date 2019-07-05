@@ -3,6 +3,8 @@ import os
 
 from gumo.datastore.infrastructure.configuration import DatastoreConfiguration
 
+from google.cloud import datastore
+
 
 class TestDatastoreConfiguration:
     def setup_method(self, method):
@@ -30,6 +32,7 @@ class TestDatastoreConfiguration:
         assert not o.use_local_emulator
         assert o.emulator_host is None
         assert o.namespace is None
+        assert isinstance(o.client, datastore.Client)
 
     def test_build_success_with_emulator_configuration(self):
         assert os.environ['GOOGLE_CLOUD_PROJECT'] is not None
@@ -41,6 +44,7 @@ class TestDatastoreConfiguration:
         assert o.use_local_emulator
         assert o.emulator_host == os.environ['DATASTORE_EMULATOR_HOST']
         assert o.namespace is None
+        assert isinstance(o.client, datastore.Client)
 
     def test_build_failure_without_google_cloud_project_env_vars(self):
         if 'GOOGLE_CLOUD_PROJECT' in os.environ:

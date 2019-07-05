@@ -8,6 +8,8 @@ from typing import Union
 
 from gumo.core import GoogleCloudProjectID
 
+from google.cloud import datastore
+
 
 @dataclasses.dataclass(frozen=False)
 class DatastoreConfiguration:
@@ -15,6 +17,7 @@ class DatastoreConfiguration:
     use_local_emulator: bool = False
     emulator_host: Optional[str] = None
     namespace: Optional[str] = None
+    client: Optional[datastore.Client] = None
 
     _ENV_KEY_GOOGLE_CLOUD_PROJECT: ClassVar = 'GOOGLE_CLOUD_PROJECT'
     _ENV_KEY_DATASTORE_EMULATOR_HOST: ClassVar = 'DATASTORE_EMULATOR_HOST'
@@ -25,6 +28,7 @@ class DatastoreConfiguration:
         with self._lock:
             self._set_google_cloud_project()
             self._set_emulator_config()
+            self._set_client()
 
     def _set_google_cloud_project(self):
         if isinstance(self.google_cloud_project, str):
@@ -60,3 +64,12 @@ class DatastoreConfiguration:
                 f'Env-var "{self._ENV_KEY_DATASTORE_EMULATOR_HOST}" and self.emulator_host do not match. '
                 f'env["{self._ENV_KEY_DATASTORE_EMULATOR_HOST}"]={host}, self.emulator_host={self.emulator_host}'
             )
+
+    def _set_client(self):
+        if isinstance(self.client, datastore.Client):
+            return
+
+        self.client = datastore.Client(
+            project=self.google_cloud_project.value,
+            namespace=self.namespace,
+        )
