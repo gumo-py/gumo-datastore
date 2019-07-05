@@ -1,7 +1,7 @@
 import pytest
 
 from gumo.datastore._configuration import ConfigurationFactory
-from gumo.datastore.domain.configuration import DatastoreConfiguration
+from gumo.datastore.infrastructure.configuration import DatastoreConfiguration
 
 
 def test_configuration_factory_build():

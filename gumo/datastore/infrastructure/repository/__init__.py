@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from gumo.core.injector import injector
 
 from gumo.core import GumoConfiguration
-from gumo.datastore import DatastoreConfiguration
+from gumo.datastore.infrastructure.configuration import DatastoreConfiguration
 
 from gumo.datastore.infrastructure.entity_key_mapper import EntityKeyMapper
 

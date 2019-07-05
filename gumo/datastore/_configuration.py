@@ -5,7 +5,7 @@ from typing import Optional
 from typing import Union
 
 from gumo.core.injector import injector
-from gumo.datastore.domain.configuration import DatastoreConfiguration
+from gumo.datastore.infrastructure.configuration import DatastoreConfiguration
 
 
 logger = getLogger('gumo.datastore')
