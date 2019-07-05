@@ -11,7 +11,7 @@ from gumo.core.domain.entity_key import EntityKey
 from gumo.core.domain.entity_key import EntityKeyFactory
 from gumo.core.domain.entity_key import IncompleteKey
 
-from gumo.datastore.infrastructure.repository import DatastoreClientFactory
+from gumo.datastore.infrastructure.configuration import DatastoreConfiguration
 
 from google.cloud import datastore
 
@@ -60,8 +60,8 @@ class CachedKeyIDAllocator:
     @property
     def datastore_client(self) -> datastore.Client:
         if self._datastore_client is None:
-            factory = injector.get(DatastoreClientFactory)  # type: DatastoreClientFactory
-            self._datastore_client = factory.build()
+            configuration = injector.get(DatastoreConfiguration)  # type: DatastoreConfiguration
+            self._datastore_client = configuration.client
 
         return self._datastore_client
 

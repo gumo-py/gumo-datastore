@@ -1,11 +1,11 @@
-import os
 from logging import getLogger
+from injector import singleton
 
 from typing import Optional
 from typing import Union
 
 from gumo.core.injector import injector
-from gumo.datastore.domain.configuration import DatastoreConfiguration
+from gumo.datastore.infrastructure.configuration import DatastoreConfiguration
 
 
 logger = getLogger('gumo.datastore')
@@ -43,21 +43,8 @@ def configure(
         namespace=namespace,
     )
 
-    if config.use_local_emulator:
-        if 'DATASTORE_EMULATOR_HOST' not in os.environ:
-            raise RuntimeError(
-                f'The environment variable "DATASTORE_EMULATOR_HOST" is required when using a datastore emulator.'
-            )
-        if os.environ['DATASTORE_EMULATOR_HOST'] != config.emulator_host:
-            host = os.environ['DATASTORE_EMULATOR_HOST']
-            raise RuntimeError(
-                f'Env-var "env["DATASTORE_EMULATOR_HOST"] and config.emulator_host are not corrected. '
-                f'env["DATASTORE_EMULATOR_HOST"]={host}, config.emulator_host={config.emulator_host}'
-            )
-
     logger.debug(f'Gumo.Datastore is configured, config={config}')
-
-    injector.binder.bind(DatastoreConfiguration, to=config)
+    injector.binder.bind(DatastoreConfiguration, to=config, scope=singleton)
 
     from gumo.datastore._bind import datastore_binder
     injector.binder.install(datastore_binder)
