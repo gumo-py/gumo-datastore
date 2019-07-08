@@ -3,6 +3,9 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.7.2
+        environment:
+          GOOGLE_CLOUD_PROJECT: gumo-task
+          DATASTORE_EMULATOR_HOST: localhost:8082
       - image: quay.io/gumo/datastore-emulator:v241
         command: --no-store-on-disk --consistency=1
         environment:
