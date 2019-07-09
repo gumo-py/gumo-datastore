@@ -1,0 +1,3 @@
+flask
+gumo-core==0.1.0a6
+injector==0.15.0
