@@ -42,11 +42,18 @@ pip-compile:
 .PHONY: test
 test: build
 	pip3 install dist/${package_name}*.tar.gz
-	pytest -v --junit-xml=test-reports/results.xml tests/config.py tests
+	GOOGLE_CLOUD_PROJECT=gumo-datastore-test \
+		DATASTORE_EMULATOR_HOST=127.0.0.1:8082 \
+		pytest -v --junit-xml=test-reports/results.xml tests
 
-.PHONY: emulator-start emulator-stop
+.PHONY: emulator-start emulator-stop run-sample
 emulator-start:
 	docker-compose up --detach
 
 emulator-stop:
 	docker-compose stop
+
+run-sample: emulator-start
+	GOOGLE_CLOUD_PROJECT=gumo-datastore \
+		DATASTORE_EMULATOR_HOST=127.0.0.1:8081 \
+		python sample/main.py

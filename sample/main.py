@@ -1,10 +1,8 @@
 import flask
 import logging
 import sys
-import os
 import datetime
 
-from gumo.core import configure as core_configure
 from gumo.datastore.infrastructure import DatastoreRepositoryMixin
 from gumo.datastore.infrastructure import DatastoreEntity
 
@@ -31,12 +29,6 @@ class SampleRepository(DatastoreRepositoryMixin):
         query = self.datastore_client.query(kind=self.KIND)
         query.keys_only()
         return len(list(query.fetch()))
-
-
-if 'GOOGLE_CLOUD_PROJECT' not in os.environ:
-    os.environ['GOOGLE_CLOUD_PROJECT'] = 'gumo-datastore-test'
-
-core_configure()
 
 
 app = flask.Flask(__name__)
