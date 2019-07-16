@@ -1,6 +1,7 @@
 import os
 import dataclasses
 import threading
+import requests
 
 from typing import Optional
 from typing import ClassVar
@@ -9,6 +10,20 @@ from typing import Union
 from gumo.core import GoogleCloudProjectID
 
 from google.cloud import datastore
+import google.auth.credentials
+
+
+class EmulatorCreds(google.auth.credentials.Credentials):
+    def __init__(self):
+        self.token = b'secret'
+        self.expiry = None
+
+    @property
+    def valid(self):
+        return True
+
+    def refresh(self, _):
+        raise RuntimeError('Should never be refreshed.')
 
 
 @dataclasses.dataclass(frozen=False)
@@ -67,6 +82,16 @@ class DatastoreConfiguration:
 
     def _set_client(self):
         if isinstance(self.client, datastore.Client):
+            return
+
+        if self._ENV_KEY_DATASTORE_EMULATOR_HOST in os.environ:
+            emulator_credentials = EmulatorCreds()
+            self.client = datastore.Client(
+                project=self.google_cloud_project.value,
+                namespace=self.namespace,
+                credentials=emulator_credentials,
+                _http=requests.Session()
+            )
             return
 
         self.client = datastore.Client(

@@ -20,3 +20,6 @@ __all__ = [
 ]
 
 logger = getLogger('gumo.datastore')
+
+
+configure()

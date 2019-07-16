@@ -1,2 +1,2 @@
 google-cloud-datastore>=1.7.1
-gumo-core
+gumo-core==0.1.0a7
