@@ -6,7 +6,7 @@ version = '0.1.0a3'
 description = 'Gumo Datastore Library'
 dependencies = [
     'gumo-core >= 0.1.0a7',
-    'google-cloud-datastore >= 1.7.1',
+    'google-cloud-datastore >= 1.7.1, >= 1.8.0',
 ]
 
 with open("README.md", "r") as fh:
