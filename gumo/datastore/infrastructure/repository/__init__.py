@@ -33,7 +33,7 @@ class DatastoreRepositoryMixin:
 
 @contextmanager
 def datastore_transaction():
-    datastore_client = injector.get(DatastoreConfiguration).client  # type: datastore.Client
+    datastore_client = injector.get(DatastoreConfiguration, scope=singleton).client  # type: datastore.Client
 
     with datastore_client.transaction():
         yield
