@@ -1,56 +1,51 @@
 from gumo.core.injector import injector
-from gumo.core.application.entity_key import KeyIDAllocator
 from gumo.core import EntityKeyFactory
 from gumo.core.domain.entity_key import IncompleteKey
 
 from gumo.datastore.infrastructure.key_id_allocator import DatastoreKeyIDAllocator
-from gumo.datastore.infrastructure.key_id_allocator import CachedKeyIDAllocator
 
 
 class TestKeyIDAllocator:
-    _key_id_allocator = None
+    def build_key(self, kind: str):
+        return EntityKeyFactory().build_incomplete_key(kind=kind)
 
-    @property
-    def key_id_allocator(self) -> KeyIDAllocator:
-        if self._key_id_allocator is None:
-            injector.binder.bind(KeyIDAllocator, to=DatastoreKeyIDAllocator)
-            self._key_id_allocator = injector.get(KeyIDAllocator)
-
-        return self._key_id_allocator
+    def build_allocator(self) -> DatastoreKeyIDAllocator:
+        return injector.get(DatastoreKeyIDAllocator)
 
     def test_allocate_key(self):
-        incomplete_key = EntityKeyFactory().build_incomplete_key(kind='Sample')
+        incomplete_key = self.build_key(kind='Sample')
         assert isinstance(incomplete_key, IncompleteKey)
+        allocator = self.build_allocator()
 
-        allocated_key = self.key_id_allocator.allocate(incomplete_key=incomplete_key)
+        allocated_key = allocator.allocate(incomplete_key=incomplete_key)
         assert allocated_key.kind() == 'Sample'
         assert isinstance(allocated_key.name(), int)
 
-
-class TestCachedKeyIDAllocator:
-    key_factory = EntityKeyFactory()
-
-    def key_id_allocator(self) -> CachedKeyIDAllocator:
-        return injector.get(CachedKeyIDAllocator)
-
-    def tet_instance(self):
-        assert isinstance(self.key_id_allocator(), CachedKeyIDAllocator)
-
-    def test_cache(self):
-        allocator = self.key_id_allocator()
-        incomplete_key = self.key_factory.build_incomplete_key(kind='Sample')
+    def test_allocate_keys_with_cache(self):
+        incomplete_key = self.build_key(kind='Sample')
+        allocator = self.build_allocator()
 
         assert allocator._cache == {}
-
-        allocator.allocate(incomplete_key=incomplete_key)
+        allocator.allocate(incomplete_key)
         assert len(allocator._cache) == 1
-        assert len(allocator.fetch_cached_keys(incomplete_key)) == allocator.ALLOCATE_BATCH_SIZE - 1
+        assert len(allocator._cache[incomplete_key]) == allocator.ALLOCATE_BATCH_SIZE - 1
+        keys = allocator.allocate_keys(incomplete_key, num_keys=2)
+        assert len(keys) == 2
+        assert len(allocator._cache[incomplete_key]) == allocator.ALLOCATE_BATCH_SIZE - 3
 
-        incomplete_with_parent_key = self.key_factory.build_incomplete_key(
-            kind='Example',
-            parent=self.key_factory.build(kind='Parent', name=123456)
-        )
-        allocator.allocate(incomplete_key=incomplete_with_parent_key)
+        allocator.allocate(self.build_key(kind='AnotherKind'))
         assert len(allocator._cache) == 2
-        allocator.allocate(incomplete_key=incomplete_with_parent_key)
-        assert len(allocator.fetch_cached_keys(incomplete_with_parent_key)) == allocator.ALLOCATE_BATCH_SIZE - 2
+
+    def test_allocate_key_with_parent(self):
+        incomplete_key = EntityKeyFactory().build_incomplete_key(
+            kind='Sample',
+            parent=EntityKeyFactory().build(kind='Parent', name=123456)
+        )
+        assert incomplete_key.key_literal() == "IncompleteKey('Parent', 123456, Sample)"
+        allocator = self.build_allocator()
+        allocated_key = allocator.allocate(incomplete_key=incomplete_key)
+        assert allocated_key.kind() == 'Sample'
+        assert isinstance(allocated_key.name(), int)
+
+        assert allocated_key.parent().kind() == 'Parent'
+        assert allocated_key.parent().name() == 123456
