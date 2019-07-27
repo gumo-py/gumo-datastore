@@ -1,5 +1,7 @@
 from contextlib import contextmanager
 
+from injector import singleton
+
 from gumo.core.injector import injector
 from gumo.datastore.infrastructure.configuration import DatastoreConfiguration
 from gumo.datastore.infrastructure.entity_key_mapper import EntityKeyMapper
@@ -16,7 +18,7 @@ class DatastoreRepositoryMixin:
     @property
     def datastore_client(self) -> datastore.Client:
         if self._datastore_client is None:
-            configuration = injector.get(DatastoreConfiguration)  # type: DatastoreConfiguration
+            configuration = injector.get(DatastoreConfiguration, scope=singleton)  # type: DatastoreConfiguration
             self._datastore_client = configuration.client
 
         return self._datastore_client
@@ -24,7 +26,7 @@ class DatastoreRepositoryMixin:
     @property
     def entity_key_mapper(self) -> EntityKeyMapper:
         if self._entity_key_mapper is None:
-            self._entity_key_mapper = injector.get(EntityKeyMapper)  # type: EntityKeyMapper
+            self._entity_key_mapper = injector.get(EntityKeyMapper, scope=singleton)  # type: EntityKeyMapper
 
         return self._entity_key_mapper
 
