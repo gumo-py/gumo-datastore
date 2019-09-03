@@ -30,4 +30,5 @@ class DatastoreMapperMixin:
             minute=t.minute,
             second=t.second,
             microsecond=t.microsecond,
+            tzinfo=datetime.timezone.utc,
         )
