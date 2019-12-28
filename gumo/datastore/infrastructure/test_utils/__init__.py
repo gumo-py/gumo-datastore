@@ -8,11 +8,11 @@ class DatastoreRepositoryMixinForTest(DatastoreRepositoryMixin):
 
     def cleanup_entities(self):
         if self.KIND is not None:
-            self.count_entities_of_kind(kind=self.KIND)
+            self.cleanup_entities_of_kind(kind=self.KIND)
 
         if self.KINDS is not None and isinstance(self.KINDS, typing.Iterable):
             for kind in self.KINDS:
-                self.count_entities_of_kind(kind=kind)
+                self.cleanup_entities_of_kind(kind=kind)
 
     def count_entities(self) -> int:
         if self.KIND is None:
