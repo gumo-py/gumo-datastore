@@ -2,14 +2,12 @@ import os
 import dataclasses
 import threading
 import requests
-from injector import singleton
 
 from typing import Optional
 from typing import ClassVar
 from typing import Union
 
 from gumo.core import GoogleCloudProjectID
-from gumo.core.injector import injector
 
 from google.cloud import datastore
 import google.auth.credentials
