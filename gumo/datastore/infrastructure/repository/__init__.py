@@ -7,19 +7,20 @@ from gumo.core import EntityKey
 from gumo.core import NoneKey
 from gumo.datastore.infrastructure.configuration import DatastoreConfiguration
 from gumo.datastore.infrastructure.entity_key_mapper import EntityKeyMapper
-
-from google.cloud import datastore
-from google.cloud.datastore import Query
+from gumo.datastore.infrastructure.alias import DatastoreClient
+from gumo.datastore.infrastructure.alias import DatastoreEntity
+from gumo.datastore.infrastructure.alias import DatastoreKey
+from gumo.datastore.infrastructure.alias import DatastoreQuery
 
 
 class DatastoreRepositoryMixin:
     _datastore_client = None
     _entity_key_mapper = None
 
-    DatastoreEntity = datastore.Entity
+    DatastoreEntity = DatastoreEntity
 
     @classmethod
-    def get_datastore_client(cls) -> datastore.Client:
+    def get_datastore_client(cls) -> DatastoreClient:
         if cls._datastore_client is None:
             configuration: DatastoreConfiguration = injector.get(DatastoreConfiguration, scope=singleton)
             cls._datastore_client = configuration.client
@@ -27,7 +28,7 @@ class DatastoreRepositoryMixin:
         return cls._datastore_client
 
     @property
-    def datastore_client(self) -> datastore.Client:
+    def datastore_client(self) -> DatastoreClient:
         if self._datastore_client is None:
             self.get_datastore_client()
 
@@ -36,18 +37,18 @@ class DatastoreRepositoryMixin:
     @property
     def entity_key_mapper(self) -> EntityKeyMapper:
         if self._entity_key_mapper is None:
-            self._entity_key_mapper = injector.get(EntityKeyMapper)  # type: EntityKeyMapper
+            self._entity_key_mapper: EntityKeyMapper = injector.get(EntityKeyMapper)
 
         return self._entity_key_mapper
 
-    def to_entity_key(self, datastore_key: typing.Optional[datastore.Key]) -> EntityKey:
+    def to_entity_key(self, datastore_key: typing.Optional[DatastoreKey]) -> EntityKey:
         return self.entity_key_mapper.to_entity_key(datastore_key=datastore_key)
 
-    def to_datastore_key(self, entity_key: typing.Union[EntityKey, NoneKey, None]) -> typing.Optional[datastore.Key]:
+    def to_datastore_key(self, entity_key: typing.Union[EntityKey, NoneKey, None]) -> typing.Optional[DatastoreKey]:
         return self.entity_key_mapper.to_datastore_key(entity_key=entity_key)
 
     def _fetch_page(
-        self, query: Query, limit: int, start_cursor: typing.Optional[bytes]
+        self, query: DatastoreQuery, limit: int, start_cursor: typing.Optional[bytes]
     ) -> typing.Tuple[typing.List[DatastoreEntity], typing.Optional[str], bool]:
         query_iterator = query.fetch(limit=limit, start_cursor=start_cursor)
         pages = query_iterator.pages
@@ -72,7 +73,7 @@ class DatastoreRepositoryMixin:
 
 @contextmanager
 def datastore_transaction():
-    datastore_client = injector.get(DatastoreConfiguration).client  # type: datastore.Client
+    datastore_client: DatastoreClient = injector.get(DatastoreConfiguration).client
 
     with datastore_client.transaction():
         yield

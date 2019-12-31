@@ -2,18 +2,17 @@ import dataclasses
 import datetime
 import typing
 
-from google.cloud import datastore
-
-DatastoreEntity = datastore.Entity
+from gumo.datastore.infrastructure.alias import DatastoreEntity
+from gumo.datastore.infrastructure.alias import DatastoreKey
 
 
 @dataclasses.dataclass()
 class DataModel:
-    key: datastore.Key
+    key: DatastoreKey
 
     exclude_from_indexes: typing.ClassVar[typing.List[str]] = []
     DatastoreEntity: typing.ClassVar = DatastoreEntity
-    DatastoreKey: typing.ClassVar = datastore.Key
+    DatastoreKey: typing.ClassVar = DatastoreKey
 
     def to_datastore_entity(self) -> DatastoreEntity:
         raise NotImplementedError()
