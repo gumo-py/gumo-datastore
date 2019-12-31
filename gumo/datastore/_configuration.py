@@ -5,8 +5,7 @@ from typing import Optional
 from typing import Union
 
 from gumo.core.injector import injector
-from gumo.datastore.infrastructure.configuration import DatastoreConfiguration
-
+from gumo.datastore.infrastructure.configuration import DatastoreConfiguration, DatastoreClient
 
 logger = getLogger('gumo.datastore')
 
@@ -50,3 +49,11 @@ def configure(
     injector.binder.install(datastore_binder)
 
     return config
+
+
+def get_config() -> DatastoreConfiguration:
+    return injector.get(DatastoreConfiguration, scope=singleton)
+
+
+def get_datastore_client() -> DatastoreClient:
+    return get_config().client
