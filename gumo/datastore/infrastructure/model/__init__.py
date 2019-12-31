@@ -4,16 +4,18 @@ import typing
 
 from google.cloud import datastore
 
+DatastoreEntity = datastore.Entity
+
 
 @dataclasses.dataclass()
 class DataModel:
     key: datastore.Key
 
     exclude_from_indexes: typing.ClassVar[typing.List[str]] = []
-    DatastoreEntity: typing.ClassVar = datastore.Entity
+    DatastoreEntity: typing.ClassVar = DatastoreEntity
     DatastoreKey: typing.ClassVar = datastore.Key
 
-    def to_datastore_entity(self) -> "DataModel.DatastoreEntity":
+    def to_datastore_entity(self) -> DatastoreEntity:
         raise NotImplementedError()
 
     @classmethod
