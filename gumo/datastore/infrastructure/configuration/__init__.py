@@ -13,6 +13,9 @@ from google.cloud import datastore
 import google.auth.credentials
 
 
+DatastoreClient = datastore.Client
+
+
 class EmulatorCreds(google.auth.credentials.Credentials):
     def __init__(self):
         self.token = b'secret'
@@ -32,7 +35,7 @@ class DatastoreConfiguration:
     use_local_emulator: bool = False
     emulator_host: Optional[str] = None
     namespace: Optional[str] = None
-    client: Optional[datastore.Client] = None
+    client: Optional[DatastoreClient] = None
 
     _ENV_KEY_GOOGLE_CLOUD_PROJECT: ClassVar = 'GOOGLE_CLOUD_PROJECT'
     _ENV_KEY_DATASTORE_EMULATOR_HOST: ClassVar = 'DATASTORE_EMULATOR_HOST'
@@ -81,7 +84,7 @@ class DatastoreConfiguration:
             )
 
     def _set_client(self):
-        if isinstance(self.client, datastore.Client):
+        if isinstance(self.client, DatastoreClient):
             return
 
         if self._ENV_KEY_DATASTORE_EMULATOR_HOST in os.environ:

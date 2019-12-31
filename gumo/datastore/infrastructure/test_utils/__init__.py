@@ -6,26 +6,31 @@ class DatastoreRepositoryMixinForTest(DatastoreRepositoryMixin):
     KIND = None
     KINDS = None
 
-    def cleanup_entities(self):
-        if self.KIND is not None:
-            self.cleanup_entities_of_kind(kind=self.KIND)
+    @classmethod
+    def cleanup_entities(cls):
+        if cls.KIND is not None:
+            cls.cleanup_entities_of_kind(kind=cls.KIND)
 
-        if self.KINDS is not None and isinstance(self.KINDS, typing.Iterable):
-            for kind in self.KINDS:
-                self.cleanup_entities_of_kind(kind=kind)
+        if cls.KINDS is not None and isinstance(cls.KINDS, typing.Iterable):
+            for kind in cls.KINDS:
+                cls.cleanup_entities_of_kind(kind=kind)
 
-    def count_entities(self) -> int:
-        if self.KIND is None:
+    @classmethod
+    def count_entities(cls) -> int:
+        if cls.KIND is None:
             raise RuntimeError('KIND must be present.')
 
-        return self.count_entities_of_kind(kind=self.KIND)
+        return cls.count_entities_of_kind(kind=cls.KIND)
 
-    def cleanup_entities_of_kind(self, kind: str):
-        query = self.datastore_client.query(kind=kind)
+    @classmethod
+    def cleanup_entities_of_kind(cls, kind: str):
+        client = cls.get_datastore_client()
+        query = client.query(kind=kind)
         query.keys_only()
-        self.datastore_client.delete_multi(keys=[entity.key for entity in query.fetch()])
+        client.delete_multi(keys=[entity.key for entity in query.fetch()])
 
-    def count_entities_of_kind(self, kind: str) -> int:
-        query = self.datastore_client.query(kind=kind)
+    @classmethod
+    def count_entities_of_kind(cls, kind: str) -> int:
+        query = cls.get_datastore_client().query(kind=kind)
         query.keys_only()
         return len(list(query.fetch()))

@@ -1,5 +1,6 @@
 import typing
 from contextlib import contextmanager
+from injector import singleton
 
 from gumo.core.injector import injector
 from gumo.core import EntityKey
@@ -16,11 +17,18 @@ class DatastoreRepositoryMixin:
 
     DatastoreEntity = datastore.Entity
 
+    @classmethod
+    def get_datastore_client(cls) -> datastore.Client:
+        if cls._datastore_client is None:
+            configuration: DatastoreConfiguration = injector.get(DatastoreConfiguration, scope=singleton)
+            cls._datastore_client = configuration.client
+
+        return cls._datastore_client
+
     @property
     def datastore_client(self) -> datastore.Client:
         if self._datastore_client is None:
-            configuration = injector.get(DatastoreConfiguration)  # type: DatastoreConfiguration
-            self._datastore_client = configuration.client
+            self.get_datastore_client()
 
         return self._datastore_client
 
