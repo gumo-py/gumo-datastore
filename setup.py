@@ -2,10 +2,10 @@ import setuptools
 
 
 name = 'gumo-datastore'
-version = '0.1.8'
+version = '0.1.9'
 description = 'Gumo Datastore Library'
 dependencies = [
-    'gumo-core >= 0.1.1',
+    'gumo-core >= 0.1.3',
     'google-cloud-datastore >= 1.7.1, >= 1.8.0',
 ]
 
