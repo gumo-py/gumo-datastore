@@ -47,9 +47,3 @@ class DatastoreMapperMixin:
 
     def dumps_json_property(self, doc: typing.Dict) -> bytes:
         return json.dumps(doc).encode('utf-8')
-
-    def to_datastore_entity(self, entity: typing.Any) -> datastore.Entity:
-        raise NotImplementedError()
-
-    def to_domain_entity(self, doc: datastore.Entity) -> typing.Any:
-        raise NotImplementedError()
