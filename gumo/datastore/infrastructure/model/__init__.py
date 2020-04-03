@@ -1,6 +1,10 @@
 import dataclasses
 import datetime
-import typing
+from typing import ClassVar
+from typing import List
+from typing import Tuple
+from typing import Union
+from typing import Optional
 
 from gumo.datastore.infrastructure.alias import DatastoreEntity
 from gumo.datastore.infrastructure.alias import DatastoreKey
@@ -10,9 +14,9 @@ from gumo.datastore.infrastructure.alias import DatastoreKey
 class DataModel:
     key: DatastoreKey
 
-    exclude_from_indexes: typing.ClassVar[typing.List[str]] = []
-    DatastoreEntity: typing.ClassVar = DatastoreEntity
-    DatastoreKey: typing.ClassVar = DatastoreKey
+    exclude_from_indexes: ClassVar[Union[List[str], Tuple[str, ...]]] = []
+    DatastoreEntity: ClassVar = DatastoreEntity
+    DatastoreKey: ClassVar = DatastoreKey
 
     def to_datastore_entity(self) -> DatastoreEntity:
         raise NotImplementedError()
@@ -23,8 +27,8 @@ class DataModel:
 
     @classmethod
     def convert_optional_datetime(
-        cls, t: typing.Optional[datetime.datetime]
-    ) -> typing.Optional[datetime.datetime]:
+        cls, t: Optional[datetime.datetime]
+    ) -> Optional[datetime.datetime]:
         if t is None:
             return None
 
