@@ -10,23 +10,9 @@ from typing import Union
 from gumo.core import GoogleCloudProjectID
 
 from google.cloud import datastore
-import google.auth.credentials
 
 
 DatastoreClient = datastore.Client
-
-
-class EmulatorCreds(google.auth.credentials.Credentials):
-    def __init__(self):
-        self.token = b'secret'
-        self.expiry = None
-
-    @property
-    def valid(self):
-        return True
-
-    def refresh(self, _):
-        raise RuntimeError('Should never be refreshed.')
 
 
 @dataclasses.dataclass(frozen=False)
@@ -88,11 +74,9 @@ class DatastoreConfiguration:
             return
 
         if self._ENV_KEY_DATASTORE_EMULATOR_HOST in os.environ:
-            emulator_credentials = EmulatorCreds()
             self.client = datastore.Client(
                 project=self.google_cloud_project.value,
                 namespace=self.namespace,
-                credentials=emulator_credentials,
                 _http=requests.Session()
             )
             return
